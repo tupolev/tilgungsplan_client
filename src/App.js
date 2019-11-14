@@ -66,6 +66,25 @@ class App extends Component {
     percentformat(number) {
         return this.numberformatter.format(number);
     }
+    renderTilgungen() {
+        if (this.state.tilgungsplan.tilgungen.length > 0) {
+            return this.state.tilgungsplan.tilgungen.map((tilgung) => (
+                <tr key={tilgung.monat}>
+                    <td>{tilgung.monat}</td>
+                    <td>{tilgung.datum.substr(5, 2) + '/' + tilgung.datum.substr(0, 4)}</td>
+                    <td>{this.percentformat(tilgung.jahrTilgungProzent)}%</td>
+                    <td>{this.percentformat(tilgung.jahrZinsProzent)}%</td>
+                    <td>{this.currencyformat(tilgung.betragsWert)}€</td>
+                    <td>{this.currencyformat(tilgung.zinsWert)}€</td>
+                    <td>{this.currencyformat(tilgung.restBetrag)}€</td>
+                </tr>
+            ))
+        } else{
+            return(
+                <tr><td colspan="7">Kein Ergebniss</td></tr>
+            );
+        }
+    }
 
     render() {
         return (
@@ -111,19 +130,39 @@ class App extends Component {
                                 <tbody>
                                 <tr>
                                     <td className="col-sm-4 font-weight-bold">Darlehensbetrag</td>
-                                    <td className="col-sm-4 font-weight-normal">{this.currencyformat(this.state.tilgungsplan.anfrage.darlehensbetrag)}€</td>
+                                    <td className="col-sm-4 font-weight-normal">
+                                        {
+                                            this.state.tilgungsplan.anfrage.darlehensbetrag !== null
+                                                ? this.currencyformat(this.state.tilgungsplan.anfrage.darlehensbetrag) + '€'
+                                                : ''
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td className="col-sm-4 font-weight-bold">Sollzinssatz</td>
-                                    <td className="col-sm-4 font-weight-normal">{this.state.tilgungsplan.anfrage.sollzinssatz}%</td>
+                                    <td className="col-sm-4 font-weight-normal">
+                                        {
+                                            this.state.tilgungsplan.anfrage.sollzinssatz !== null
+                                                ? this.state.tilgungsplan.anfrage.sollzinssatz + '%'
+                                                : ''
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td className="col-sm-4 font-weight-bold">Anfänglicher Tilgung</td>
-                                    <td className="col-sm-4 font-weight-normal">{this.state.tilgungsplan.anfrage.jahrTilgungProzent}%</td>
+                                    <td className="col-sm-4 font-weight-normal">{
+                                        this.state.tilgungsplan.anfrage.jahrTilgungProzent !== null
+                                        ? this.state.tilgungsplan.anfrage.jahrTilgungProzent + '%'
+                                        : ''
+                                    }</td>
                                 </tr>
                                 <tr>
                                     <td className="col-sm-4 font-weight-bold">Zinsbindungsdauer (Jahre)</td>
-                                    <td className="col-sm-4 font-weight-normal">{this.state.tilgungsplan.anfrage.zinsbindungsdauer}</td>
+                                    <td className="col-sm-4 font-weight-normal">{
+                                        this.state.tilgungsplan.anfrage.zinsbindungsdauer !== null
+                                            ? this.state.tilgungsplan.anfrage.zinsbindungsdauer
+                                            : ''
+                                    }</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -134,16 +173,24 @@ class App extends Component {
                                 <tbody>
                                 <tr>
                                     <td className="col-sm-4 font-weight-bold">Monatsrate</td>
-                                    <td className="col-sm-4 font-weight-normal">{this.currencyformat(this.state.tilgungsplan.monatsRate)}€</td>
+                                    <td className="col-sm-4 font-weight-normal">{
+                                        this.state.tilgungsplan.monatsRate !== null
+                                        ? this.currencyformat(this.state.tilgungsplan.monatsRate) + '€'
+                                        : ''
+                                    }</td>
                                 </tr>
                                 <tr>
                                     <td className="col-sm-4 font-weight-bold">Restbetrag am Ende</td>
-                                    <td className="col-sm-4 font-weight-normal">{this.currencyformat(this.state.tilgungsplan.restSchuld)}€</td>
+                                    <td className="col-sm-4 font-weight-normal">{
+                                        this.state.tilgungsplan.restSchuld !== null
+                                        ? this.currencyformat(this.state.tilgungsplan.restSchuld) + '€'
+                                        : ''
+                                    }</td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <h4 className="h4">Tilgungsplan Verlauf</h4>
+                        <h4 className="h4">Tilgungsplan Aufgliederung</h4>
                         <table className="table">
                             <thead>
                             <tr>
@@ -151,23 +198,13 @@ class App extends Component {
                                 <td>Datum</td>
                                 <td>Tilgung</td>
                                 <td>Sollzinssatz</td>
-                                <td>Betrag</td>
-                                <td>Zinsen</td>
-                                <td>Restbetrag</td>
+                                <td>Tilgungsanteil</td>
+                                <td>Zinsanteil</td>
+                                <td>Restschuld</td>
                             </tr>
                             </thead>
                             <tbody>
-                            {this.state.tilgungsplan.tilgungen.map((tilgung) => (
-                                <tr key={tilgung.monat}>
-                                    <td>{tilgung.monat}</td>
-                                    <td>{tilgung.datum.substr(5, 2) + '/' + tilgung.datum.substr(0, 4)}</td>
-                                    <td>{this.percentformat(tilgung.jahrTilgungProzent)}%</td>
-                                    <td>{this.percentformat(tilgung.jahrZinsProzent)}%</td>
-                                    <td>{this.currencyformat(tilgung.betragsWert)}€</td>
-                                    <td>{this.currencyformat(tilgung.zinsWert)}€</td>
-                                    <td>{this.currencyformat(tilgung.restBetrag)}€</td>
-                                </tr>
-                            ))}
+                            {this.renderTilgungen()}
                             </tbody>
                         </table>
                     </div>
