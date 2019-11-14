@@ -1,5 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## API endpoint configuration
+
+Check src/config.js file and edit the appConfig.apiEndpoint property with the url of the gradle backend app.
+
 ## Available Scripts
 
 In the project directory, you can run:

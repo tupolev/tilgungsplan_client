@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
+import {appConfig} from "./config";
 
-const _API_ENDPOINT = 'http://localhost:8081/berechnen';
+const _API_ENDPOINT = appConfig.apiEndpoint;
 
 class App extends Component {
     constructor(props) {
